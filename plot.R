@@ -1,25 +1,27 @@
 #Read the data
 data = read.table("results.txt")
-s = data$V3
+s = data$V1
 
 #Set size of the lattice and MC steps (check in code)
-N = 25
-steps = 300
+N = 128
+steps = 10000
+
+#Add 1 for the initial conditions
+steps = steps + 1
 
 #Create a position vector
 x = c(1:N)
 y = x
 
-#Set (plotting) size of each node
-nodesize = 2.3
-
-#Add 1 for the initial conditions
-steps = steps + 1
+#Set (plotting) size of each node and number of frames to plot
+nodesize = 0.6
+layers = 500
 
 #Create a directory to save the frames
 dir.create("./frames")
 
 for(i in 1:steps) {
+  if(i%%round(steps/layers,0) == 0) {
   #Create a new .PNG file
   png(paste("./frames/",i,".png",sep=""),height=520,width=500)
   
@@ -36,4 +38,5 @@ for(i in 1:steps) {
     }
   }
   dev.off()
+  }
 }
