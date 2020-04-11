@@ -1,4 +1,4 @@
-c   DESCRIPTION. This is an implementation of the Ising method following
+ c   DESCRIPTION. This is an implementation of the Ising method following
 c   the algorithm developed by Metropolis et al. (1953). The actual program
 c   starts at line 100. The preceding lines of code are a module used in the
 c   program to generate random numbers.
@@ -111,9 +111,9 @@ c     Declaration of variables
       integer, dimension(:), allocatable :: nl,nr,nu,nd
 
 c     Set size of lattice (nodes per side), temperature & MC steps
-      lattice = 128
-      temp = 5.d0
-      steps = 10000
+      lattice = 500
+      temp = 0.d0
+      steps = 30
 
 c     Set seed by reading current time (array of dim. 8) and multiplying every
 c     number (yr*mo*day*(...)*miliseconds) to get a different seed every time
@@ -133,7 +133,7 @@ c     Fill spin array with uniform +1 and -1 values
         do n=1,lattice
           i=(n-1)*lattice+m
           spin(i) = 1
-          !if(dran_u() .lt. 0.5) spin(i) = -1
+          if(dran_u() .lt. 0.5) spin(i) = -1
           write(70,*) spin(i)
         end do
       end do
@@ -145,12 +145,12 @@ c     Save neighbours of each node just once (improves performance)
 
           !Right neighbours
           nr(i) = m+1
-          if(nr(i).eq.lattice+1) nr(i)=1
+          if(nr(i).eq.lattice+1) nr(i) = 1
           nr(i)=(n-1)*lattice+nr(i)
 
           !Left neighbours
           nl(i) = m-1
-          if(nl(i).eq.0) nl(i)=lattice
+          if(nl(i).eq.0) nl(i) = lattice
           nl(i)=(n-1)*lattice+nl(i)
 
           !Up neighbours
@@ -160,7 +160,7 @@ c     Save neighbours of each node just once (improves performance)
 
           !Down neighbours
           nd(i) = n-1
-          if(nd(i).eq.0) nu(i) = lattice
+          if(nd(i).eq.0) nd(i) = lattice
           nd(i) = (nd(i)-1)*lattice+m
         end do
       end do
@@ -180,9 +180,7 @@ c     Metropoli's algorithm
         !Compare with uniform random value and take decision
         if(ksi .lt. p) spin(j) = -spin(j)
         !Save results every MC iteration
-        if(mod(i,lattice**2) .eq. 0) then
-          write(70,*) spin
-        end if
+        if(mod(i,lattice**2) .eq. 0) write(70,*) spin
       end do
       call cpu_time(finish)
 
